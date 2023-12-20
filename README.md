@@ -180,7 +180,7 @@ The Hospital Management System is a software application designed to streamline 
 1. Clone the repository:
    ```bash
 [   git clone https://github.com/your-username/hospital-management-system.git
-](https://github.com/CodeGeek2003/HospitalDataBase_ManagmentSystem/)
+](https://github.com/CodeGeek2003/HospitalDataBase_ManagmentSystem/)```
 2. Install Requirements:
 -pip install -r requirements.txt
 -pip3 install -r requirements.txt
