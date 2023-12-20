@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Database Creation/CreateDataBaseSystemAnalysis.sql" dialect="AZURE" />
+    <file url="file://$PROJECT_DIR$/Database Creation/Create_DataBase.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Database Creation/Practice_Database.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/functions.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/patient_gui.py" dialect="GenericSQL" />
+  </component>
+</project>
