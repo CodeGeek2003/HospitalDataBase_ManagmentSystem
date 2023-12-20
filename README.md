@@ -176,18 +176,19 @@ The Hospital Management System is a software application designed to streamline 
 - Writes: MedHis_ID (references Medical_History.MedHis_ID), DoctorUsername (references Doctor.Username)
 
 ## Usage
-
-1. Clone the repository:
-   ```bash
-[   git clone https://github.com/your-username/hospital-management-system.git
-](https://github.com/CodeGeek2003/HospitalDataBase_ManagmentSystem/)```
-2. Install Requirements:
+1. Install Requirements:
 -pip install -r requirements.txt
 -pip3 install -r requirements.txt
-3. Create Database:
+2. Create Database:
 -Run Create_DataBase.py
-4. Open the Managment System:
+3. Open the Managment System:
 -Run main.py and use Staff loging with the following credentials:
 -Username: admin
 -Password: admin
+##Cloning
+1. Clone the repository:
+   ```bash
+[   git clone [https://github.com/CodeGeek2003/HospitalDataBase-ManagementSystem.git]
+]
+
 
