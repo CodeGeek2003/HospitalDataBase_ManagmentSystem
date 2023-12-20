@@ -252,7 +252,14 @@ CREATE TABLE Writes (
     FOREIGN KEY (DoctorUsername) REFERENCES Doctor(Username)
 );
 """)
-
+# Create Admin User
+cursor.execute("""
+INSERT INTO User VALUES('admin', '1999-01-01', '1234567890', '1234 Admin Street', 'SystemAdmin', 'admin', 'Admin', 'Admin');
+""")
+# Create Admin SystemAdmin with highest access level
+cursor.execute("""
+INSERT INTO SystemAdmin VALUES('admin', 2);
+""")
 # Commit the changes and close the database connection
 conn.commit()
 conn.close()
