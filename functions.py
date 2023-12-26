@@ -6,7 +6,6 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from login_gui import *
 from patient_gui import open_patient
-from allergy_gui import *
 from doctor_gui import *
 from nurse_gui import *
 from pharmacist_gui import *
@@ -66,7 +65,6 @@ def open_sys_1(window):
 def open_sys_2(window):
     window.destroy()
     open_sys_2_gui()
-
 def display_doctor_data():
     conn = sqlite3.connect("hospital_database.sqlite")
     cursor = conn.cursor()
@@ -235,9 +233,6 @@ def display_system_admin_data():
 def on_close(window, conn):
     window.destroy()
     conn.close()
-
-# Example usage
-
 def check_patient_ssn(ssn,window):
     try:
         # Establish a connection and create a cursor
@@ -263,19 +258,13 @@ def check_patient_ssn(ssn,window):
         # Close the connection
         if conn:
             conn.close()
-
 def check_user_username(username,password,window):
     try:
-        # Establish a connection and create a cursor
         conn = sqlite3.connect("hospital_database.sqlite")
         cursor = conn.cursor()
-
-        # Execute the SELECT query to check if the SSN exists in the Patient table
         cursor.execute("SELECT count(*),UserType FROM User WHERE Username = ? AND Password =?", (username,password,))
         result = cursor.fetchone()
         gl.u_type=result[1]
-
-        # Check the result
         if result and result[0] > 0:
             if gl.u_type=="Doctor":
                 gl.u_username = username
@@ -342,8 +331,8 @@ def open_hos_2(window):
 def display_written_medical_histories():
     print(gl.u_username)
     # Connect to the database
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
 
     # Fetch medical histories for the specified doctor
     cursor.execute("""
@@ -364,7 +353,7 @@ def display_written_medical_histories():
     medical_histories = cursor.fetchall()
 
     # Close the database connection
-    connection.close()
+    conn.close()
 
     # Create a GUI window with a tree view
     root = tk.Tk()
@@ -386,8 +375,8 @@ def display_written_medical_histories():
     # Run the GUI
     root.mainloop()
 def display_helping_nurses_for_doctor():
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
     cursor.execute("""
         SELECT NHD.NurseUsername, U.FirstName, U.LastName, N.PagerNumber, N.LicenseNumber
         FROM NHelpsD NHD
@@ -398,7 +387,7 @@ def display_helping_nurses_for_doctor():
 
     helping_nurses = cursor.fetchall()
 
-    connection.close()
+    conn.close()
 
     root = tk.Tk()
     root.title("Helping Nurses")
@@ -419,8 +408,8 @@ def display_helping_nurses_for_doctor():
 
     root.mainloop()
 def display_utilized_tools_for_doctor():
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
 
     cursor.execute("""
         SELECT DISTINCT U.DoctorUsername, R.Res_ID, R.Res_Name, R.Quantity, R.Type, R.Manufacture
@@ -431,7 +420,7 @@ def display_utilized_tools_for_doctor():
 
     utilized_tools = cursor.fetchall()
 
-    connection.close()
+    conn.close()
 
     root = tk.Tk()
     root.title("Utilized Tools for Doctor")
@@ -451,7 +440,6 @@ def display_utilized_tools_for_doctor():
     tree.pack(expand=True, fill="both")
 
     root.mainloop()
-
 def modify_resource_quantity():
     conn = sqlite3.connect("hospital_database.sqlite")
     cursor = conn.cursor()
@@ -480,7 +468,6 @@ def modify_resource_quantity():
 
     conn.commit()
     conn.close()
-
 def add_medical_history():
     def save_medical_history():
         conn = sqlite3.connect("hospital_database.sqlite")
@@ -575,7 +562,6 @@ def add_medical_history():
     window.mainloop()
 def add_patient_gui():
     def add_patient():
-        # Retrieve data from entry widgets
         ssn = ssn_entry.get()
         first_name = first_name_entry.get()
         last_name = last_name_entry.get()
@@ -587,15 +573,15 @@ def add_patient_gui():
 
         # Insert the patient into the database
         try:
-            connection = sqlite3.connect("hospital_database.sqlite")  # Change the database name accordingly
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Change the database name accordingly
+            cursor = conn.cursor()
 
             # Example SQL query to insert a patient into the Patient table
             query = f"INSERT INTO Patient (SSN, FirstName, LastName, PhoneNumber, Address, Gender, DoB, RoomNumber) " \
                     f"VALUES ('{ssn}', '{first_name}', '{last_name}', '{phone_number}', '{address}', '{gender}', '{dob}', '{room_number}')"
 
             cursor.execute(query)
-            connection.commit()
+            conn.commit()
 
             # Show a success message
             messagebox.showinfo("Success", "Patient added successfully!")
@@ -607,8 +593,8 @@ def add_patient_gui():
             messagebox.showerror("Error", f"Error adding patient: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -651,12 +637,11 @@ def add_patient_gui():
 
     # Run the GUI
     window.mainloop()
-
 def view_assigned_patients():
     try:
         # Connect to the database
-        connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-        cursor = connection.cursor()
+        conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+        cursor = conn.cursor()
 
         # Query to get patients assigned to the nurse
         query = f"SELECT * FROM NHelpsP " \
@@ -694,15 +679,13 @@ def view_assigned_patients():
         messagebox.showerror("Error", f"Error fetching assigned patients: {str(e)}")
 
     finally:
-        if connection:
-            connection.close()
-
-
+        if conn:
+            conn.close()
 def view_assigned_doctors():
     try:
         # Connect to the database
-        connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-        cursor = connection.cursor()
+        conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+        cursor = conn.cursor()
 
         # Query to get doctors assigned to the nurse
         query = f"SELECT User.FirstName AS DoctorFirstName, User.LastName AS DoctorLastName, " \
@@ -743,9 +726,8 @@ def view_assigned_doctors():
         messagebox.showerror("Error", f"Error fetching assigned doctors: {str(e)}")
 
     finally:
-        if connection:
-            connection.close()
-
+        if conn:
+            conn.close()
 def add_system_admin_gui():
     def add_system_admin():
         # Retrieve data from entry widgets
@@ -760,8 +742,8 @@ def add_system_admin_gui():
 
         try:
             # Connect to the database
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
 
             # Insert user data into the User table
             user_query = f"INSERT INTO [User] (Username, DoB, PhoneNumber, Address, UserType, Password, FirstName, LastName) " \
@@ -774,7 +756,7 @@ def add_system_admin_gui():
             cursor.execute(sys_admin_query)
 
             # Commit the changes
-            connection.commit()
+            conn.commit()
 
             # Show a success message
             messagebox.showinfo("Success", "System Admin added successfully!")
@@ -786,8 +768,8 @@ def add_system_admin_gui():
             messagebox.showerror("Error", f"Error adding system admin: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -830,7 +812,6 @@ def add_system_admin_gui():
 
     # Run the GUI
     window.mainloop()
-
 def add_nurse_gui():
     def add_nurse():
         # Retrieve data from entry widgets
@@ -846,8 +827,8 @@ def add_nurse_gui():
 
         try:
             # Connect to the database
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
 
             # Insert user data into the User table
             user_query = f"INSERT INTO [User] (Username, DoB, PhoneNumber, Address, UserType, Password, FirstName, LastName) " \
@@ -860,7 +841,7 @@ def add_nurse_gui():
             cursor.execute(nurse_query)
 
             # Commit the changes
-            connection.commit()
+            conn.commit()
 
             # Show a success message
             messagebox.showinfo("Success", "Nurse added successfully!")
@@ -872,8 +853,8 @@ def add_nurse_gui():
             messagebox.showerror("Error", f"Error adding nurse: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -919,7 +900,6 @@ def add_nurse_gui():
 
     # Run the GUI
     window.mainloop()
-
 def add_doctor_gui():
     def add_doctor():
         # Retrieve data from entry widgets
@@ -936,8 +916,8 @@ def add_doctor_gui():
 
         try:
             # Connect to the database
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
 
             # Insert user data into the User table
             user_query = f"INSERT INTO [User] (Username, DoB, PhoneNumber, Address, UserType, Password, FirstName, LastName) " \
@@ -950,7 +930,7 @@ def add_doctor_gui():
             cursor.execute(doctor_query)
 
             # Commit the changes
-            connection.commit()
+            conn.commit()
 
             # Show a success message
             messagebox.showinfo("Success", "Doctor added successfully!")
@@ -962,8 +942,8 @@ def add_doctor_gui():
             messagebox.showerror("Error", f"Error adding doctor: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -1026,8 +1006,8 @@ def add_pharmacist_gui():
 
         try:
             # Connect to the database
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
 
             # Insert user data into the User table
             user_query = f"INSERT INTO [User] (Username, DoB, PhoneNumber, Address, UserType, Password, FirstName, LastName) " \
@@ -1040,7 +1020,7 @@ def add_pharmacist_gui():
             cursor.execute(pharmacist_query)
 
             # Commit the changes
-            connection.commit()
+            conn.commit()
 
             # Show a success message
             messagebox.showinfo("Success", "Pharmacist added successfully!")
@@ -1052,8 +1032,8 @@ def add_pharmacist_gui():
             messagebox.showerror("Error", f"Error adding pharmacist: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -1096,7 +1076,6 @@ def add_pharmacist_gui():
 
     # Run the GUI
     window.mainloop()
-
 def add_hospital_manager_gui():
     def add_hospital_manager():
         # Retrieve data from entry widgets
@@ -1111,8 +1090,8 @@ def add_hospital_manager_gui():
         access_level = access_level_entry.get()
 
         try:
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
             user_query = f"INSERT INTO [User] (Username, DoB, PhoneNumber, Address, UserType, Password, FirstName, LastName) " \
                          f"VALUES ('{username}', '{dob}', '{phone_number}', '{address}', 'HospitalManager', '{password}', '{first_name}', '{last_name}')"
             cursor.execute(user_query)
@@ -1120,7 +1099,7 @@ def add_hospital_manager_gui():
                                      f"VALUES ('{username}', '{role}', '{access_level}')"
             cursor.execute(hospital_manager_query)
 
-            connection.commit()
+            conn.commit()
 
             messagebox.showinfo("Success", "Hospital Manager added successfully!")
 
@@ -1130,8 +1109,8 @@ def add_hospital_manager_gui():
             messagebox.showerror("Error", f"Error adding hospital manager: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -1177,7 +1156,6 @@ def add_hospital_manager_gui():
 
     # Run the GUI
     window.mainloop()
-
 def sell_medicine_gui():
     def sell_medicine():
         # Retrieve data from entry widgets
@@ -1186,8 +1164,8 @@ def sell_medicine_gui():
 
         try:
             # Connect to the database
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
 
             # Check if medicine exists in the Medicine table
             check_query = f"SELECT * FROM Medicine WHERE Res_ID = {medicine_id}"
@@ -1208,7 +1186,7 @@ def sell_medicine_gui():
                 cursor.execute(update_query)
 
                 # Commit the changes
-                connection.commit()
+                conn.commit()
 
                 # Show a success message
                 messagebox.showinfo("Success", f"{quantity_sold} units of medicine sold successfully!")
@@ -1220,8 +1198,8 @@ def sell_medicine_gui():
             messagebox.showerror("Error", f"Error selling medicine: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -1246,7 +1224,6 @@ def sell_medicine_gui():
 
     # Run the GUI
     window.mainloop()
-
 def add_medicine_gui():
     def add_medicine():
         # Retrieve data from entry widgets
@@ -1262,8 +1239,8 @@ def add_medicine_gui():
 
         try:
             # Connect to the database
-            connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
-            cursor = connection.cursor()
+            conn = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+            cursor = conn.cursor()
 
             # Insert data into the Resources table
             resources_query = f"INSERT INTO Resources (Res_ID, Res_Name, Quantity, Type, Manufacture) " \
@@ -1276,7 +1253,7 @@ def add_medicine_gui():
             cursor.execute(medicine_query)
 
             # Commit the changes
-            connection.commit()
+            conn.commit()
 
             # Show a success message
             messagebox.showinfo("Success", "Medicine added successfully!")
@@ -1288,8 +1265,8 @@ def add_medicine_gui():
             messagebox.showerror("Error", f"Error adding medicine: {str(e)}")
 
         finally:
-            if connection:
-                connection.close()
+            if conn:
+                conn.close()
 
     # Create the main window
     window = tk.Tk()
@@ -1336,12 +1313,11 @@ def add_medicine_gui():
 
     # Run the GUI
     window.mainloop()
-
 def get_hospital_manager_data():
     import sqlite3
 
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
     query = """
     SELECT u.FirstName || ' ' || u.LastName AS Name, u.DoB, hm.AccessLevel
     FROM [User] u
@@ -1351,18 +1327,16 @@ def get_hospital_manager_data():
     cursor.execute(query,(gl.u_username,))
     result = cursor.fetchone()
     cursor.close()
-    connection.close()
+    conn.close()
     if result:
         gl.u_name = result[0]
         gl.u_dob = result[1]
         gl.h_level = result[2]
-# ... (existing code)
-
 def get_doctor_info_and_patient_count():
     import sqlite3
 
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
 
     query = """
     SELECT u.FirstName || ' ' || u.LastName AS DoctorName, u.DoB AS DoctorDoB, d.PagerNumber, COUNT(t.PatientSSN) AS PatientCount
@@ -1377,18 +1351,17 @@ def get_doctor_info_and_patient_count():
     result = cursor.fetchone()
 
     cursor.close()
-    connection.close()
+    conn.close()
 
     if result:
         gl.u_name = result[0]
         gl.u_dob = result[1]
         gl.d_pager = result[2]
         gl.d_p_count = result[3]
-
 def get_pharmacist_info():
     ic(gl.u_username)
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
 
     query = """
     SELECT u.FirstName || ' ' || u.LastName AS PharmacistName, u.DoB AS PharmacistDoB, p.LicenseNumber
@@ -1401,17 +1374,15 @@ def get_pharmacist_info():
     result = cursor.fetchone()
 
     cursor.close()
-    connection.close()
+    conn.close()
 
     if result:
         gl.u_name = result[0]
         gl.u_dob = result[1]
         gl.ph_license = result[2]
-
-
 def get_nurse_info():
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
 
     query = """
     SELECT u.FirstName || ' ' || u.LastName AS NurseName, u.DoB AS NurseDoB, COUNT(nhp.PatientSSN) AS NumberOfPatients, n.PagerNumber
@@ -1426,7 +1397,7 @@ def get_nurse_info():
     result = cursor.fetchone()
 
     cursor.close()
-    connection.close()
+    conn.close()
 
     if result:
         gl.u_name = result[0]
@@ -1440,8 +1411,8 @@ def get_nurse_info():
         gl.n_pager = 'Not Found'
 def get_system_admin_info():
 
-    connection = sqlite3.connect("hospital_database.sqlite")
-    cursor = connection.cursor()
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
 
     query = """
     SELECT u.FirstName || ' ' || u.LastName AS AdminName, u.DoB AS AdminDoB, sa.SecurityLevel AS AccessLevel
@@ -1455,7 +1426,7 @@ def get_system_admin_info():
     result = cursor.fetchone()
 
     cursor.close()
-    connection.close()
+    conn.close()
 
     if result:
         gl.u_name = result[0]
@@ -1465,4 +1436,184 @@ def get_system_admin_info():
         gl.u_name = 'Not Found'
         gl.u_dob = 'Not Found'
         gl.s_level = 'Not Found'
+def display_allergies_for_patient():
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
+
+    # Retrieve the patient's medical history ID
+    cursor.execute("""
+        SELECT MHI.MedHis_ID
+        FROM Medical_History MHI
+        JOIN Patient P ON MHI.PatientSSN = P.SSN
+        WHERE P.SSN = ?
+    """, (gl.p_ssn,))
+
+    medical_history_id = cursor.fetchone()
+
+    if medical_history_id:
+        # Retrieve allergies for the patient from MedicalHistory_Allergies
+        cursor.execute("""
+            SELECT * FROM MedicalHistory_Allergies
+            WHERE MedHis_ID = ?
+        """, (medical_history_id[0],))
+
+        patient_allergies = cursor.fetchall()
+
+        conn.close()
+
+        root = Tk()
+        root.title("Patient Allergies")
+
+        tree = ttk.Treeview(root)
+        tree["columns"] = ("Medical_History" ,"AllergyID")
+        tree.heading("Medical_History", text="Medical History")
+        tree.heading("AllergyID", text="Allergy")
+
+        for allergy in patient_allergies:
+            tree.insert("", "end", text=allergy[0], values=(allergy[0], allergy[1]))
+
+        tree.pack(expand=True, fill="both")
+
+        root.mainloop()
+
+def display_diagnosis_for_patient():
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
+
+    # Retrieve the patient's medical history ID
+    cursor.execute("""
+        SELECT MHI.MedHis_ID
+        FROM Medical_History MHI
+        JOIN Patient P ON MHI.PatientSSN = P.SSN
+        WHERE P.SSN = ?
+    """, (gl.p_ssn,))
+
+    medical_history_id = cursor.fetchone()
+
+    if medical_history_id:
+        cursor.execute("""
+            SELECT * FROM MedicalHistory_Diagnosis
+            WHERE MedHis_ID = ?
+        """, (medical_history_id[0],))
+
+        patient_allergies = cursor.fetchall()
+
+        conn.close()
+
+        root = Tk()
+        root.title("Patient Diagnosis")
+
+        tree = ttk.Treeview(root)
+        tree["columns"] = ("Medical_History","DiagnosisID")
+        tree.heading("Medical_History", text="Medical History")
+        tree.heading("DiagnosisID", text="Diagnosis")
+
+        for allergy in patient_allergies:
+            tree.insert("", "end", text=allergy[0], values=(allergy[0], allergy[1]))
+
+        tree.pack(expand=True, fill="both")
+
+        root.mainloop()
+
+def display_procedures_for_patient():
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
+
+    # Retrieve the patient's medical history ID
+    cursor.execute("""
+        SELECT MHI.MedHis_ID
+        FROM Medical_History MHI
+        JOIN Patient P ON MHI.PatientSSN = P.SSN
+        WHERE P.SSN = ?
+    """, (gl.p_ssn,))
+
+    medical_history_id = cursor.fetchone()
+
+    if medical_history_id:
+        cursor.execute("""
+            SELECT * FROM MedicalHistory_Procedures
+            WHERE MedHis_ID = ?
+        """, (medical_history_id[0],))
+
+        patient_procedure = cursor.fetchall()
+
+        conn.close()
+
+        root = Tk()
+        root.title("Patient Procedures")
+
+        tree = ttk.Treeview(root)
+        tree["columns"] = ("Medical_History","ProcedureID")
+        tree.heading("Medical_History", text="Medical History")
+        tree.heading("ProcedureID", text="Procedure")
+
+        for procedure in patient_procedure:
+            tree.insert("", "end", text=procedure[0], values=(procedure[0], procedure[1]))
+
+        tree.pack(expand=True, fill="both")
+
+        root.mainloop()
+def display_treatment_for_patient():
+    conn = sqlite3.connect("hospital_database.sqlite")
+    cursor = conn.cursor()
+
+    # Retrieve the patient's medical history ID
+    cursor.execute("""
+        SELECT MHI.MedHis_ID
+        FROM Medical_History MHI
+        JOIN Patient P ON MHI.PatientSSN = P.SSN
+        WHERE P.SSN = ?
+    """, (gl.p_ssn,))
+
+    medical_history_id = cursor.fetchone()
+
+    if medical_history_id:
+        cursor.execute("""
+            SELECT * FROM MedicalHistory_Treatment
+            WHERE MedHis_ID = ?
+        """, (medical_history_id[0],))
+
+        patient_treatment = cursor.fetchall()
+
+        conn.close()
+
+        root = Tk()
+        root.title("Patient Treatment")
+
+        tree = ttk.Treeview(root)
+        tree["columns"] = ("Medical_History","TreatmentID")
+        tree.heading("Medical_History", text="Medical History")
+        tree.heading("TreatmentID", text="Treatment")
+
+        for treatment in patient_treatment:
+            tree.insert("", "end", text=treatment[0], values=(treatment[0], treatment[1]))
+
+        tree.pack(expand=True, fill="both")
+
+        root.mainloop()
+def display_logs_data():
+    connection = sqlite3.connect("hospital_database.sqlite")  # Replace with your actual database name
+    cursor = connection.cursor()
+
+    # Retrieve all data from the logs table
+    cursor.execute("SELECT * FROM logs")
+    logs_data = cursor.fetchall()
+
+    connection.close()
+
+    root = tk.Tk()
+    root.title("Logs Data")
+
+    tree = ttk.Treeview(root)
+    tree["columns"] = ("Action", "Table", "Date")
+    tree.heading("Action", text="Action")
+    tree.heading("Table", text="Table")
+    tree.heading("Date", text="Date")
+
+    for log_entry in logs_data:
+        tree.insert("", "end", values=log_entry)
+
+    tree.pack(expand=True, fill="both")
+
+    root.mainloop()
 

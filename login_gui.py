@@ -1,21 +1,14 @@
 from pathlib import Path
+#file name is x, path user/pycharm/project/x.png
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
-
-
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/frame0")
-
-
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
-
 def login_gui(open_patient_login,open_staff_login):
     window = Tk()
-
     window.geometry("978x353")
     window.configure(bg = "#FFFFFF")
-
-
     canvas = Canvas(
         window,
         bg = "#FFFFFF",
@@ -25,7 +18,6 @@ def login_gui(open_patient_login,open_staff_login):
         highlightthickness = 0,
         relief = "ridge"
     )
-
     canvas.place(x = 0, y = 0)
     image_image_1 = PhotoImage(
         file=relative_to_assets("image_1.png"))
@@ -34,7 +26,6 @@ def login_gui(open_patient_login,open_staff_login):
         176.0,
         image=image_image_1
     )
-
     image_image_2 = PhotoImage(
         file=relative_to_assets("image_2.png"))
     canvas.create_image(
@@ -42,7 +33,6 @@ def login_gui(open_patient_login,open_staff_login):
         173.0,
         image=image_image_2
     )
-
     image_image_3 = PhotoImage(
         file=relative_to_assets("image_3.png"))
     canvas.create_image(
@@ -50,7 +40,6 @@ def login_gui(open_patient_login,open_staff_login):
         236.0,
         image=image_image_3
     )
-
     button_image_1 = PhotoImage(
         file=relative_to_assets("button_1.png"))
     staff_btn = Button(
@@ -66,7 +55,6 @@ def login_gui(open_patient_login,open_staff_login):
         width=99.0,
         height=31.0
     )
-
     button_image_2 = PhotoImage(
         file=relative_to_assets("button_2.png"))
     patient_btn = Button(

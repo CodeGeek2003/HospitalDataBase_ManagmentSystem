@@ -259,3 +259,124 @@ ADD FOREIGN KEY (MedHis_ID) REFERENCES Medical_History(MedHis_ID);
 
 ALTER TABLE Writes
 ADD FOREIGN KEY (DoctorUsername) REFERENCES Doctor(Username);
+
+                       --Triggers--
+CREATE TABLE logs (
+    action VARCHAR(20),
+    [table] VARCHAR(20),
+    [date] DATETIME
+);
+
+CREATE TRIGGER USER_INSERT AFTER INSERT ON [user]
+BEGIN
+    INSERT INTO logs VALUES ('INSERT', 'USER', DATETIME('now'));
+END;
+
+CREATE TRIGGER USER_DELETE AFTER DELETE ON [user]
+BEGIN
+    INSERT INTO logs VALUES ('DELETE', 'USER', DATETIME('now'));
+END;
+
+CREATE TRIGGER PATIENT_INSERT AFTER INSERT ON PATIENT
+BEGIN
+    INSERT INTO logs VALUES ('INSERT', 'PATIENT', DATETIME('now'));
+END;
+
+CREATE TRIGGER PATIENT_DELETE AFTER DELETE ON PATIENT
+BEGIN
+    INSERT INTO logs VALUES ('DELETE', 'PATIENT', DATETIME('now'));
+END;
+
+CREATE TRIGGER MEDICINE_INSERT AFTER INSERT ON MEDICINE
+BEGIN
+    INSERT INTO logs VALUES ('INSERT', 'MEDICINE', DATETIME('now'));
+END;
+
+CREATE TRIGGER MEDICINE_DELETE AFTER DELETE ON MEDICINE
+BEGIN
+    INSERT INTO logs VALUES ('DELETE', 'MEDICINE', DATETIME('now'));
+END;
+                                -- Stored Procedures --
+/*
+CREATE PROCEDURE GetUserInformation AS
+BEGIN
+    SELECT * FROM [User];
+END;
+CREATE PROCEDURE GetPatientInformation AS
+BEGIN
+    SELECT * FROM Patient;
+END;
+CREATE PROCEDURE GetMedicineInformation AS
+BEGIN
+    SELECT * FROM Medicine;
+END;
+ */
+-------------------- in sql lite procedures are not supported --------------------
+CREATE VIEW GetUserInformation AS
+SELECT * FROM [User];
+CREATE VIEW GetPatientInformation AS
+SELECT * FROM Patient;
+CREATE VIEW GetMedicineInformation AS
+SELECT * FROM Medicine;
+-----------------------------------------------------------------------------------
+-- Retrieve User information
+SELECT * FROM GetUserInformation;
+
+-- Retrieve Patient information
+SELECT * FROM GetPatientInformation;
+
+-- Retrieve Medicine information
+SELECT * FROM GetMedicineInformation;
+-----------------------------------------------------------------------------------
+--create non clustered index on patient table
+CREATE INDEX patient_index ON Patient(SSN,DoB);
+--create non clustered index on medicine table
+CREATE INDEX medicine_index ON Medicine(Res_ID,Expiration);
+--create non clustered index on user table
+CREATE INDEX user_index ON [User](Username,DoB);
+-----------------------------------------------------------------------------------
+
+/*
+-- Declare a cursor for the USER_INFO table
+DECLARE user_cursor CURSOR FOR
+    SELECT 'NewUser' AS USERNAME, 'UserRole' AS ROLE_USER, 'UserPassword' AS PASSWORD_USER, 1 AS SECURITY_CLEARANCE;
+
+DECLARE @USERNAME VARCHAR(50);
+DECLARE @ROLE_USER VARCHAR(60);
+DECLARE @PASSWORD_USER VARCHAR(13);
+DECLARE @SECURITY_CLEARANCE INT;
+DECLARE @DYNAMICUSERNAME VARCHAR(50);
+DECLARE @COUNTER INT = 8;
+DECLARE @P_COUNTER INT = 0;
+
+OPEN user_cursor;
+
+FETCH NEXT FROM user_cursor INTO @DYNAMICUSERNAME, @ROLE_USER, @PASSWORD_USER, @SECURITY_CLEARANCE;
+
+WHILE @P_COUNTER < 5
+BEGIN
+    -- Append counter to make the username unique
+    SET @DYNAMICUSERNAME = 'NewUser' + CAST(@COUNTER AS VARCHAR(10));
+
+    -- Insert data into USER_INFO table
+    INSERT INTO USER_INFO (USERNAME, ROLE_USER, PASSWORD_USER, SECURITY_CLEARANCE)
+    VALUES (@DYNAMICUSERNAME, @ROLE_USER, @PASSWORD_USER, @SECURITY_CLEARANCE);
+
+    -- Increment counters
+    SET @COUNTER = @COUNTER + 1;
+    SET @P_COUNTER = @P_COUNTER + 1;
+
+    -- Fetch the next row
+    FETCH NEXT FROM user_cursor INTO @DYNAMICUSERNAME, @ROLE_USER, @PASSWORD_USER, @SECURITY_CLEARANCE;
+END
+
+CLOSE user_cursor;
+DEALLOCATE user_cursor;
+
+SELECT * FROM USER_INFO;
+DELETE FROM  USER_INFO
+
+
+
+
+*/

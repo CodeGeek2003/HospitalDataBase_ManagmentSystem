@@ -249,6 +249,8 @@ def open_sys_2_gui():
 
     button_image_9 = PhotoImage(
         file=relative_to_assets("button_9.png"))
+    button_image_100 = PhotoImage(
+        file=relative_to_assets("button_100.png"))
     vPharm_btn = Button(
         image=button_image_9,
         borderwidth=0,
@@ -309,6 +311,19 @@ def open_sys_2_gui():
         y=568.0,
         width=160.0,
         height=44.0
+    )
+    mhistory_btn = Button(
+        image=button_image_100,
+        borderwidth=0,
+        highlightthickness=0,
+        command=lambda: fn.display_logs_data(),
+        relief="flat"
+    )
+    mhistory_btn.place(
+        x=4.0,
+        y=404.0,
+        width=38.0,
+        height=41.0
     )
     window.resizable(False, False)
     window.mainloop()

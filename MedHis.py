@@ -200,7 +200,7 @@ def open_medhis():
         image=button_image_4,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_4 clicked"),
+        command=lambda: fn.display_allergies_for_patient(),
         relief="flat"
     )
     all_btn.place(
@@ -216,7 +216,7 @@ def open_medhis():
         image=button_image_5,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_5 clicked"),
+        command=lambda: fn.display_diagnosis_for_patient(),
         relief="flat"
     )
     diag_btn.place(
@@ -232,7 +232,7 @@ def open_medhis():
         image=button_image_6,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_6 clicked"),
+        command=lambda: fn.display_procedures_for_patient(),
         relief="flat"
     )
     proc_btn.place(
@@ -248,7 +248,7 @@ def open_medhis():
         image=button_image_7,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_7 clicked"),
+        command=lambda:fn.display_treatment_for_patient(),
         relief="flat"
     )
     treat_btn.place(

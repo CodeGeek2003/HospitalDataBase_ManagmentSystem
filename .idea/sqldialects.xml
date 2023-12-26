@@ -6,5 +6,6 @@
     <file url="file://$PROJECT_DIR$/Database Creation/Practice_Database.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/functions.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/patient_gui.py" dialect="GenericSQL" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/14071247-628f-4078-b666-b337f4db15d8/console_6.sql" dialect="SQLite" />
   </component>
 </project>
