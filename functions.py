@@ -46,7 +46,7 @@ def show_message_box(title, message):
     messagebox.showinfo(title, message)
 def logout_func(window):
     window.destroy()
-    login_gui(open_patient_login,open_patient_login)
+    login_gui(open_patient_login,open_staff_login)
 def open_patient_gui(window):
     window.destroy()
     open_patient()
